@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c31py5dlsaopg"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hfekw"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_88ohi"]
+size = Vector3(0.05, 0.1, 0.5)
+
+[node name="pickaxe" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_hfekw")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.262038, 0)
+mesh = SubResource("BoxMesh_88ohi")

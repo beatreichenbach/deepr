@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=3 uid="uid://c55p42db2ymft"]
+
+[ext_resource type="Script" path="res://controllers/scripts/fps_controller.gd" id="1_tbvnb"]
+[ext_resource type="PackedScene" uid="uid://cipfthi45ns44" path="res://flare.tscn" id="2_ajjwp"]
+[ext_resource type="PackedScene" uid="uid://c31py5dlsaopg" path="res://pickaxe.tscn" id="3_8na4y"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kgnew"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lhc8f"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6vjrb"]
+properties/0/path = NodePath("../..:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/0/watch = false
+properties/1/path = NodePath("../..:rotation")
+properties/1/spawn = true
+properties/1/sync = true
+properties/1/watch = false
+
+[node name="CharacterBody3D" type="CharacterBody3D" node_paths=PackedStringArray("CAMERA")]
+script = ExtResource("1_tbvnb")
+flare_scene = ExtResource("2_ajjwp")
+CAMERA = NodePath("camera_controller/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_kgnew")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_lhc8f")
+skeleton = NodePath("../..")
+
+[node name="camera_controller" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="camera_controller"]
+
+[node name="VoxelViewer" type="VoxelViewer" parent="camera_controller/Camera3D"]
+requires_data_block_notifications = true
+
+[node name="RayCast3D" type="RayCast3D" parent="camera_controller"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.786158)
+target_position = Vector3(0, -5, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="camera_controller"]
+light_color = Color(1, 0.937255, 0.568627, 1)
+light_energy = 2.0
+spot_range = 10.0
+spot_angle = 35.0
+
+[node name="pickaxe" parent="camera_controller" instance=ExtResource("3_8na4y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.3, -0.6)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath("../camera_controller/pickaxe")
+replication_config = SubResource("SceneReplicationConfig_6vjrb")

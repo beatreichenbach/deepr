@@ -1,0 +1,73 @@
+[gd_scene load_steps=7 format=3 uid="uid://dyjuukl3d6dnp"]
+
+[ext_resource type="Script" path="res://controllers/scripts/world.gd" id="1_4jpin"]
+[ext_resource type="PackedScene" uid="uid://c55p42db2ymft" path="res://controllers/fps_controller.tscn" id="1_wwiht"]
+[ext_resource type="Environment" uid="uid://cyw5eyqv8hbir" path="res://default_env.tres" id="3_jnulw"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_baufv"]
+
+[sub_resource type="VoxelGeneratorNoise" id="VoxelGeneratorNoise_i32jv"]
+noise = SubResource("FastNoiseLite_baufv")
+height_range = 100.0
+
+[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_tbley"]
+
+[node name="world" type="Node3D"]
+script = ExtResource("1_4jpin")
+player_scene = ExtResource("1_wwiht")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_jnulw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.906307, 0.422618, 0, -0.422618, 0.906307, 0, 0, 0)
+light_color = Color(1, 0.498039, 0.360784, 1)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="host" type="Button" parent="CanvasLayer"]
+offset_left = 519.0
+offset_top = 251.0
+offset_right = 652.0
+offset_bottom = 300.0
+text = "Host"
+
+[node name="join" type="Button" parent="CanvasLayer"]
+offset_left = 678.0
+offset_top = 254.0
+offset_right = 794.0
+offset_bottom = 303.0
+text = "Join"
+
+[node name="host_ip" type="TextEdit" parent="CanvasLayer"]
+offset_left = 509.0
+offset_top = 319.0
+offset_right = 799.0
+offset_bottom = 372.0
+text = "76.219.225.94"
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 410.0
+offset_top = 328.0
+offset_right = 499.0
+offset_bottom = 364.0
+text = "Host IP"
+
+[node name="VoxelTerrain" type="VoxelTerrain" parent="."]
+generator = SubResource("VoxelGeneratorNoise_i32jv")
+mesher = SubResource("VoxelMesherTransvoxel_tbley")
+
+[node name="VoxelTerrainMultiplayerSynchronizer" type="VoxelTerrainMultiplayerSynchronizer" parent="VoxelTerrain"]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://controllers/fps_controller.tscn")
+spawn_path = NodePath("..")
+
+[node name="spawn_point" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 44.1848, 0)
+gizmo_extents = 1.0
+
+[connection signal="pressed" from="CanvasLayer/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="CanvasLayer/join" to="." method="_on_join_pressed"]
